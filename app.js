@@ -8,6 +8,8 @@ import authRouter from "./router/auth.js";
 import { config } from "./config.js";
 import { initSocket } from "./connection/socket.js";
 import { sequelize } from "./db/database.js";
+import yaml from "yamljs";
+import swaggerUI from "swagger-ui-express";
 
 const app = express();
 
@@ -15,12 +17,14 @@ const corsOption = {
   origin: config.cors.allowedOrigin,
   optionSuccessStatus: 200,
 };
+const openAPIDocument = yaml.load("./api/openapi.yaml");
 
 app.use(express.json());
 app.use(cors(corsOption));
 app.use(morgan("tiny"));
 app.use(helmet());
 
+app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(openAPIDocument));
 app.use("/tweets", tweetsRouter);
 app.use("/auth", authRouter);
 
