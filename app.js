@@ -3,23 +3,26 @@ import cors from "cors";
 import morgan from "morgan";
 import helmet from "helmet";
 import "express-async-errors";
+import cookieParser from "cookie-parser";
+import yaml from "yamljs";
+import swaggerUI from "swagger-ui-express";
 import tweetsRouter from "./router/tweets.js";
 import authRouter from "./router/auth.js";
 import { config } from "./config.js";
 import { initSocket } from "./connection/socket.js";
 import { sequelize } from "./db/database.js";
-import yaml from "yamljs";
-import swaggerUI from "swagger-ui-express";
 
 const app = express();
 
 const corsOption = {
   origin: config.cors.allowedOrigin,
   optionSuccessStatus: 200,
+  credentials: true,
 };
 const openAPIDocument = yaml.load("./api/openapi.yaml");
 
 app.use(express.json());
+app.use(cookieParser());
 app.use(cors(corsOption));
 app.use(morgan("tiny"));
 app.use(helmet());
