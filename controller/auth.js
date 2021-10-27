@@ -39,7 +39,13 @@ export async function signIn(req, res) {
 }
 
 export async function logout(req, res, next) {
-  res.cookie("token", "");
+  const options = {
+    maxAge: config.jwt.expiresInSec * 1000,
+    httpOnly: true,
+    sameSite: "none",
+    secure: true,
+  };
+  res.cookie("token", "", options);
   res.status(200).json({ message: "User has been logged out" });
 }
 
